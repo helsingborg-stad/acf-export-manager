@@ -1,6 +1,6 @@
 <?php
 
-namespace HelsingborgsStad;
+namespace AcfExportManager;
 
 class AcfExportManager
 {

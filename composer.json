@@ -9,6 +9,11 @@
             "email": "kristoffer.svanmark@knowit.se"
         }
     ],
+    "autoload": {
+        "psr-4": {
+            "AcfExportManager\\": "src"
+        }
+    },
     "minimum-stability": "stable",
     "require": {}
 }
