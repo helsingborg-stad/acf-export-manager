@@ -65,13 +65,8 @@ class AcfExportManager
     {
         $filename = $this->getExportFilename($fieldgroup);
 
-        if (file_exists($this->exportFolder . 'php/' . $filename['php'])) {
-            unlink($this->exportFolder . 'php/' . $filename['php']);
-        }
-
-        if (file_exists($this->exportFolder . 'json/' . $filename['json'])) {
-            unlink($this->exportFolder . 'json/' . $filename['json']);
-        }
+        $this->maybeUunlink($this->exportFolder . 'php/' . $filename['php']);
+        $this->maybeUnlink($this->exportFolder . 'json/' . $filename['json']);
 
         return true;
     }
@@ -113,14 +108,14 @@ class AcfExportManager
         $filename = $this->getExportFilename($fieldgroup);
 
         // Export php file
-        unlink($this->exportFolder . 'php/' . $filename['php']);
+        $this->maybeUnlink($this->exportFolder . 'php/' . $filename['php']);
         $code = $this->generatePhp($fieldgroup['ID'], $translate);
         $phpFile = fopen($this->exportFolder . 'php/' . $filename['php'], 'w');
         fwrite($phpFile, $code);
         fclose($phpFile);
 
         // Export json file
-        unlink($this->exportFolder . 'json/' . $filename['json']);
+        $this->maybeUnlink($this->exportFolder . 'json/' . $filename['json']);
         $jsonFile = fopen($this->exportFolder . 'json/' . $filename['json'], 'w');
         $json = $this->getJson($this->getFieldgroupParams($fieldgroup['ID'], false));
         fwrite($jsonFile, $json);
@@ -163,6 +158,15 @@ class AcfExportManager
             mkdir($this->exportFolder . 'php');
             chmod($this->exportFolder . 'php', 0777);
         }
+    }
+
+    public function maybeUnlink(string $path) : bool
+    {
+        if (file_exists($path)) {
+            unlink($path);
+        }
+
+        return true;
     }
 
     /**
