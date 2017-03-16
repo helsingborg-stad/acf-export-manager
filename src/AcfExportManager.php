@@ -10,6 +10,9 @@ class AcfExportManager
 
     public function __construct()
     {
+        // Acf load path
+        add_filter('acf/settings/load_json', array($this, 'acfJsonLoadPath'));
+
         // Single
         add_action('acf/update_field_group', array($this, 'export'));
         add_action('acf/delete_field_group', array($this, 'deleteExport'));
@@ -20,6 +23,17 @@ class AcfExportManager
         add_filter('bulk_actions-edit-acf-field-group', array($this, 'addExportBulkAction'));
         add_filter('handle_bulk_actions-edit-acf-field-group', array($this, 'handleBulkExport'), 10, 3);
         add_action('admin_notices', array($this, 'bulkNotice'));
+    }
+
+    /**
+     * Set the acf json load path
+     * @param  array $paths Default paths
+     * @return array        Modified paths
+     */
+    public function acfJsonLoadPath($paths)
+    {
+        $paths[] = $this->exportFolder . 'json';
+        return $paths;
     }
 
     /**
@@ -113,14 +127,14 @@ class AcfExportManager
         $filename = $this->getExportFilename($fieldgroup);
 
         // Export php file
-        unlink($this->exportFolder . 'php/' . $filename['php']);
+        $this->maybeUnlink($this->exportFolder . 'php/' . $filename['php']);
         $code = $this->generatePhp($fieldgroup['ID'], $translate);
         $phpFile = fopen($this->exportFolder . 'php/' . $filename['php'], 'w');
         fwrite($phpFile, $code);
         fclose($phpFile);
 
         // Export json file
-        unlink($this->exportFolder . 'json/' . $filename['json']);
+        $this->maybeUnlink($this->exportFolder . 'json/' . $filename['json']);
         $jsonFile = fopen($this->exportFolder . 'json/' . $filename['json'], 'w');
         $json = $this->getJson($this->getFieldgroupParams($fieldgroup['ID'], false));
         fwrite($jsonFile, $json);
@@ -130,6 +144,15 @@ class AcfExportManager
             'php' => $this->exportFolder . 'php/' . $filename['php'],
             'json' => $this->exportFolder . 'json/' . $filename['json']
         );
+    }
+
+    public function maybeUnlink($path)
+    {
+        if (file_exists($path)) {
+            unlink($path);
+        }
+
+        return true;
     }
 
     /**
@@ -145,7 +168,7 @@ class AcfExportManager
         $json = str_replace('!!__(!!\'', '', $json);
         $json = str_replace("!!', !!'" . $this->textdomain . "!!')!!", '', $json);
 
-        return '[' . $json . "]\n\r";
+        return "\n\r" . $json . "\n\r";
     }
 
     /**
@@ -245,6 +268,8 @@ class AcfExportManager
         if ($translate) {
             $fieldgroup = $this->translate($fieldgroup);
         }
+
+        $fieldgroup['modified'] = time();
 
         // Preapre for export
         return acf_prepare_field_group_for_export($fieldgroup);
