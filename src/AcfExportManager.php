@@ -12,7 +12,7 @@ class AcfExportManager
     {
         // Single
         add_action('acf/update_field_group', array($this, 'export'));
-        add_action('acf/delete_field_group', array($this, 'deleteExport'));
+        //add_action('acf/delete_field_group', array($this, 'deleteExport'));
         add_filter('acf/translate_field', array($this, 'translateFieldParams'));
         add_action('post_submitbox_misc_actions', array($this, 'addGroupKeyToPostbox'));
 
