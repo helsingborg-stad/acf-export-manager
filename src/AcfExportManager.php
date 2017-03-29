@@ -43,15 +43,19 @@ class AcfExportManager
      */
     public function import() : bool
     {
-        $files = glob($this->exportFolder . 'php/' . '*.php');
+        add_action('plugins_loaded', function () {
+            $files = glob($this->exportFolder . 'php/' . '*.php');
 
-        if (empty($files)) {
-            return false;
-        }
+            if (empty($files)) {
+                return false;
+            }
 
-        foreach ($files as $file) {
-            require_once $file;
-        }
+            foreach ($files as $file) {
+                require_once $file;
+            }
+
+            return true;
+        });
 
         return true;
     }
