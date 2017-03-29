@@ -285,7 +285,7 @@ class AcfExportManager
             $field[$key] = acf_translate($field[$key]);
         }
 
-        if (isset($field['sub_fields'])) {
+        if (isset($field['sub_fields']) && is_array($field['sub_fields'])) {
             foreach ($field['sub_fields'] as &$subfield) {
                 $subfield = acf_translate_field($subfield);
             }
