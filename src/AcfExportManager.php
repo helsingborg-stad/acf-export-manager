@@ -361,8 +361,15 @@ class AcfExportManager
             return $redirectTo;
         }
 
+
         foreach ($postIds as $postId) {
-            $this->export(acf_get_field_group($postId), false, false);
+            $fieldgroup = acf_get_field_group($postId);
+
+            if (!in_array($fieldgroup['key'], $this->exportPosts)) {
+                continue;
+            }
+
+            $this->export($fieldgroup, false, false);
         }
 
         $redirectTo = add_query_arg('bulkExportedFieldgroups', count($postIds), $redirectTo);
