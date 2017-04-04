@@ -7,6 +7,7 @@ class AcfExportManager
     protected $exportFolder;
     protected $exportPosts = array();
     protected $textdomain;
+    protected $imported = array();
 
     public function __construct()
     {
@@ -51,6 +52,7 @@ class AcfExportManager
             }
 
             foreach ($files as $file) {
+                $this->imported[] = $file;
                 require_once $file;
             }
 
