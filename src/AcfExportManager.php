@@ -155,6 +155,10 @@ class AcfExportManager
      */
     public function maybeCreateExportFolders()
     {
+        if (!is_writable($this->exportFolder)) {
+            trigger_error('The export folder (' . $folder .') is not writable. Exports will not be saved.', E_USER_ERROR);
+        }
+
         if (!file_exists($this->exportFolder . 'json')) {
             mkdir($this->exportFolder . 'json');
             chmod($this->exportFolder . 'json', 0777);
@@ -315,10 +319,6 @@ class AcfExportManager
             } else {
                 chmod($folder, 0777);
             }
-        }
-
-        if (!is_writable($folder)) {
-            trigger_error('The export folder (' . $folder .') is not writable. Exports will not be saved.', E_USER_WARNING);
         }
 
         $this->exportFolder = $folder;
