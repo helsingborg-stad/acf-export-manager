@@ -33,6 +33,14 @@ class AcfExportManager
             return;
         }
 
+        // Check if aldready added
+        global $acfExportManagerHasGroupIdInSidebar;
+        if ($acfExportManagerHasGroupIdInSidebar) {
+            return;
+        }
+
+        $acfExportManagerHasGroupIdInSidebar = true;
+
         $fieldgroup = acf_get_field_group($post->ID);
 
         echo '<div class="misc-pub-section"><span style="color:#82878c;font-size:20px;display:inline-block;width:18px;vertical-align:middle;position:relative;top:-1px;text-align:center;margin-right:8px;">#</span>' . $fieldgroup['key'] . '</div>';
