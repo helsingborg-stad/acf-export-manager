@@ -75,7 +75,7 @@ class AcfExportManager
     {
         $filename = $this->getExportFilename($fieldgroup);
 
-        $this->maybeUunlink($this->exportFolder . 'php/' . $filename['php']);
+        $this->maybeUnlink($this->exportFolder . 'php/' . $filename['php']);
         $this->maybeUnlink($this->exportFolder . 'json/' . $filename['json']);
 
         return true;
