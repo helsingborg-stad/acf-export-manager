@@ -11,6 +11,7 @@ class AcfExportManager
 
     public function __construct()
     {
+
         // Single
         add_action('acf/update_field_group', array($this, 'export'));
         //add_action('acf/delete_field_group', array($this, 'deleteExport'));
@@ -292,7 +293,8 @@ class AcfExportManager
      */
     public function translateFieldParams(array $field) : array
     {
-        $keys = array('prepend', 'append', 'placeholder');
+
+        $keys = array('prepend', 'append', 'placeholder', 'default_value');
 
         foreach ($keys as $key) {
             if (!isset($field[$key])) {
